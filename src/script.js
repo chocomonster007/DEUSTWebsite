@@ -9,6 +9,8 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper)
 // Sizes
 const sizes = {
     width: window.innerWidth,
@@ -46,8 +48,23 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
+const boxGeo = new THREE.BoxGeometry(1,1,1)
+const boxMat = new THREE.MeshBasicMaterial({
+    color:"white"
+})
+const cube1 = new THREE.Mesh(boxGeo,boxMat)
+const cube2 = new THREE.Mesh(boxGeo,boxMat)
+cube1.position.x = -1
+cube2.position.x = 1
+cube1.position.y = -0.3
+cube2.position.y = -0.3
 
+
+scene.add(cube1,cube2)
 const clock = new THREE.Clock()
+
+
+
 
 
 //Animation 

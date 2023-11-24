@@ -1,5 +1,10 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import GUI from 'lil-gui';
+
+const gui = new GUI();
 
 
 
@@ -59,18 +64,49 @@ cube2.position.x = 1
 cube1.position.y = -0.3
 cube2.position.y = -0.3
 
+const groupDroite = new THREE.Group()
+const groupGauche = new THREE.Group()
 
-scene.add(cube1,cube2)
+
+groupGauche.add(cube1)
+groupDroite.add(cube2)
+
+const textMat = new THREE.MeshBasicMaterial({
+    color: "#ff0000"
+})
+
+const loader = new FontLoader();
+
+loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+	const geometry = new TextGeometry( 'Hello three.js!', {
+		font: font,
+		size: 0.07,
+		height: 0.02,
+		curveSegments: 8,
+		bevelEnabled: false,
+		bevelThickness: 0.01,
+		bevelSize: 0.001,
+		bevelOffset: 0,
+		bevelSegments: 5
+	} );
+    geometry.center()
+    const meshText = new THREE.Mesh(geometry, textMat)
+    meshText.position.set(-1,0,0.5)
+    
+    console.log(geometry.computeBoundingBox)
+    groupGauche.add(meshText)
+} );
+
+scene.add(groupGauche)
+scene.add(groupDroite)
 const clock = new THREE.Clock()
-
-
-
-
 
 //Animation 
 function tick(){
     const elapsedTime = clock.getElapsedTime()
 
+    groupGauche.rotation.x = elapsedTime * Math.PI 
     controls.update()
 
     renderer.render(scene, camera)

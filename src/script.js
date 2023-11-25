@@ -3,6 +3,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import GUI from 'lil-gui';
+import vertex from './shader/vertex.glsl'
+import fragment from './shader/fragment.glsl'
+
 
 const gui = new GUI();
 
@@ -54,19 +57,24 @@ window.addEventListener('resize', () =>
 })
 
 const boxGeo = new THREE.BoxGeometry(1,1,1)
-const boxMat = new THREE.MeshBasicMaterial({
-    color:"white"
+const boxMat = new THREE.ShaderMaterial({
+    vertexShader: vertex,
+    fragmentShader : fragment,
+    uniforms :{
+        uTime : {value : 0},
+        uTaux : {value :0 }
+    }
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat)
 const cube2 = new THREE.Mesh(boxGeo,boxMat)
-cube1.position.x = -1
-cube2.position.x = 1
-cube1.position.y = -0.3
-cube2.position.y = -0.3
+console.log(cube1.material.uniforms.uTime.value)
 
 const groupDroite = new THREE.Group()
 const groupGauche = new THREE.Group()
-
+groupGauche.position.x=-1
+groupGauche.position.y = -0.3
+groupDroite.position.x=1
+groupDroite.position.y = -0.3
 
 groupGauche.add(cube1)
 groupDroite.add(cube2)
@@ -79,10 +87,11 @@ const loader = new FontLoader();
 
 loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
 
-	const geometry = new TextGeometry( 'Hello three.js!', {
+	const geometry = new TextGeometry( "Hello three.js!"
+    , {
 		font: font,
 		size: 0.07,
-		height: 0.02,
+		height: 0.04,
 		curveSegments: 8,
 		bevelEnabled: false,
 		bevelThickness: 0.01,
@@ -90,11 +99,11 @@ loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
 		bevelOffset: 0,
 		bevelSegments: 5
 	} );
+    console.log(geometry)
     geometry.center()
     const meshText = new THREE.Mesh(geometry, textMat)
-    meshText.position.set(-1,0,0.5)
+    meshText.position.set(0,0,0.5)
     
-    console.log(geometry.computeBoundingBox)
     groupGauche.add(meshText)
 } );
 
@@ -105,8 +114,7 @@ const clock = new THREE.Clock()
 //Animation 
 function tick(){
     const elapsedTime = clock.getElapsedTime()
-
-    groupGauche.rotation.x = elapsedTime * Math.PI 
+    cube1.material.uniforms.uTime.value = elapsedTime
     controls.update()
 
     renderer.render(scene, camera)

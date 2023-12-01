@@ -1,12 +1,8 @@
 varying float vModelPosition;
+varying float test;
 
 void main(){
-    vec4 color;
-    if(vModelPosition > 0.0){
-        color = vec4(1.0,1.0,1.0,1.0);
-    }else{
-        color = vec4(1.0,1.0,0.0,1.0);
-    }
+        float colorY = test;
 
-    gl_FragColor = color;
+    gl_FragColor =  vec4(1.0,1.0,test, 1.0);
 }

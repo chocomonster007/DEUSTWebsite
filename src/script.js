@@ -28,6 +28,7 @@ const sizes = {
 // Camera
 const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height)
 camera.position.z = 3
+
 scene.add(camera)
 
 const controls = new OrbitControls(camera, canvas)
@@ -62,7 +63,7 @@ const boxMat = new THREE.ShaderMaterial({
     fragmentShader : fragment,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value :0 }
+        uTaux : {value : -0.3 }
     }
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat)
@@ -115,6 +116,8 @@ const clock = new THREE.Clock()
 function tick(){
     const elapsedTime = clock.getElapsedTime()
     cube1.material.uniforms.uTime.value = elapsedTime
+    groupGauche.rotation.x = elapsedTime * Math.PI
+    
     controls.update()
 
     renderer.render(scene, camera)
@@ -123,3 +126,9 @@ function tick(){
     
 }
 tick()
+
+document.querySelector('#next').addEventListener('click', e=>{
+
+    
+    
+})

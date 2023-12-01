@@ -116,19 +116,29 @@ const clock = new THREE.Clock()
 function tick(){
     const elapsedTime = clock.getElapsedTime()
     cube1.material.uniforms.uTime.value = elapsedTime
-    groupGauche.rotation.x = elapsedTime * Math.PI
+    
     
     controls.update()
 
     renderer.render(scene, camera)
 
     window.requestAnimationFrame(tick)
-    
+
 }
 tick()
 
 document.querySelector('#next').addEventListener('click', e=>{
-
+    rotateCube()
     
     
 })
+
+function rotateCube(){
+    const timepast = clock.getElapsedTime()
+    groupDroite.rotation.x= Math.PI * timepast
+    groupGauche.rotation.x= Math.PI * timepast
+    
+    requestAnimationFrame(rotateCube)
+
+}
+

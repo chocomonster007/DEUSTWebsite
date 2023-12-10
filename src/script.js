@@ -63,7 +63,7 @@ const boxMat = new THREE.ShaderMaterial({
     fragmentShader : fragment,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value : -0.3 }
+        uTaux : {value : 0.0 }
     }
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat)
@@ -127,18 +127,24 @@ function tick(){
 }
 tick()
 
-document.querySelector('#next').addEventListener('click', e=>{
-    rotateCube()
+document.querySelector('#next').addEventListener('click',
+    rotateCube
     
     
-})
+)
 
-function rotateCube(){
-    const timepast = clock.getElapsedTime()
-    groupDroite.rotation.x= Math.PI * timepast
-    groupGauche.rotation.x= Math.PI * timepast
-    
-    requestAnimationFrame(rotateCube)
+function rotateCube(e){
+    e.target.style.display="none"
 
+    rotateAnimation()
+    
+
+}
+function rotateAnimation(){
+    groupDroite.rotation.x += Math.PI * 0.022
+    groupGauche.rotation.x += Math.PI * 0.02
+    cube1.material.uniforms.uTaux.value += 0.02;
+
+    requestAnimationFrame(rotateAnimation)
 }
 

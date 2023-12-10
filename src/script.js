@@ -3,8 +3,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import GUI from 'lil-gui';
-import vertex from './shader/vertex.glsl'
-import fragment from './shader/fragment.glsl'
+import vertexCube from './shader/cube/vertex.glsl'
+import fragmentCube from './shader/cube/fragment.glsl'
+import vertexPlane from './shader/plane/vertex.glsl'
+import fragmentPlane from './shader/plane/fragment.glsl'
 
 
 const gui = new GUI();
@@ -59,8 +61,9 @@ window.addEventListener('resize', () =>
 
 const boxGeo = new THREE.BoxGeometry(1,1,1)
 const boxMat = new THREE.ShaderMaterial({
-    vertexShader: vertex,
-    fragmentShader : fragment,
+    vertexShader: vertexCube,
+    fragmentShader : fragmentCube,
+    transparent:true,
     uniforms :{
         uTime : {value : 0},
         uTaux : {value : 0.0 }
@@ -69,6 +72,7 @@ const boxMat = new THREE.ShaderMaterial({
 const cube1 = new THREE.Mesh(boxGeo,boxMat)
 const cube2 = new THREE.Mesh(boxGeo,boxMat)
 console.log(cube1.material.uniforms.uTime.value)
+
 
 const groupDroite = new THREE.Group()
 const groupGauche = new THREE.Group()
@@ -79,6 +83,18 @@ groupDroite.position.y = -0.3
 
 groupGauche.add(cube1)
 groupDroite.add(cube2)
+const planeGeo = new THREE.PlaneGeometry(1,1, 512)
+const planeMat= new THREE.ShaderMaterial({
+    vertexShader: vertexPlane,
+    fragmentShader: fragmentPlane,
+    uniforms: {
+        uTime:{value:0}
+    }
+})
+const plane = new THREE.Mesh(planeGeo, planeMat)
+plane.rotation.x= -Math.PI*0.5
+plane.position.y=0.3
+groupGauche.add(plane)
 
 const textMat = new THREE.MeshBasicMaterial({
     color: "#ff0000"
@@ -116,6 +132,8 @@ const clock = new THREE.Clock()
 function tick(){
     const elapsedTime = clock.getElapsedTime()
     cube1.material.uniforms.uTime.value = elapsedTime
+    plane.material.uniforms.uTime.value = elapsedTime
+
     
     
     controls.update()
@@ -148,3 +166,4 @@ function rotateAnimation(){
     requestAnimationFrame(rotateAnimation)
 }
 
+ 

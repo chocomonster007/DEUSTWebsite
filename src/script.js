@@ -5,13 +5,8 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import GUI from 'lil-gui';
 import vertexCube from './shader/cube/vertex.glsl'
 import fragmentCube from './shader/cube/fragment.glsl'
-import vertexPlane from './shader/plane/vertex.glsl'
-import fragmentPlane from './shader/plane/fragment.glsl'
-
 
 const gui = new GUI();
-
-
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -59,14 +54,13 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-const boxGeo = new THREE.BoxGeometry(1,1,1)
+const boxGeo = new THREE.BoxGeometry(1,1,1,512,512,512)
 const boxMat = new THREE.ShaderMaterial({
     vertexShader: vertexCube,
     fragmentShader : fragmentCube,
-    transparent:true,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value : 0.0 }
+        uTaux : {value : 0 },
     }
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat)
@@ -83,18 +77,6 @@ groupDroite.position.y = -0.3
 
 groupGauche.add(cube1)
 groupDroite.add(cube2)
-const planeGeo = new THREE.PlaneGeometry(1,1, 512)
-const planeMat= new THREE.ShaderMaterial({
-    vertexShader: vertexPlane,
-    fragmentShader: fragmentPlane,
-    uniforms: {
-        uTime:{value:0}
-    }
-})
-const plane = new THREE.Mesh(planeGeo, planeMat)
-plane.rotation.x= -Math.PI*0.5
-plane.position.y=0.3
-groupGauche.add(plane)
 
 const textMat = new THREE.MeshBasicMaterial({
     color: "#ff0000"
@@ -132,9 +114,6 @@ const clock = new THREE.Clock()
 function tick(){
     const elapsedTime = clock.getElapsedTime()
     cube1.material.uniforms.uTime.value = elapsedTime
-    plane.material.uniforms.uTime.value = elapsedTime
-
-    
     
     controls.update()
 
@@ -155,9 +134,8 @@ function rotateCube(e){
     e.target.style.display="none"
 
     rotateAnimation()
-    
-
 }
+
 function rotateAnimation(){
     groupDroite.rotation.x += Math.PI * 0.022
     groupGauche.rotation.x += Math.PI * 0.02

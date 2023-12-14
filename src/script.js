@@ -3,8 +3,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import GUI from 'lil-gui';
-import vertexCube from './shader/cube/vertex.glsl'
-import fragmentCube from './shader/cube/fragment.glsl'
+import vertexCube1 from './shader/cube1/vertex.glsl'
+import fragmentCube1 from './shader/cube1/fragment.glsl'
+import vertexCube2 from './shader/cube2/vertex.glsl'
+import fragmentCube2 from './shader/cube2/fragment.glsl'
+
+const choix1 = document.querySelector('.gauche')
+const choix2 = document.querySelector('.droite')
+
 
 const gui = new GUI();
 
@@ -55,16 +61,24 @@ window.addEventListener('resize', () =>
 })
 
 const boxGeo = new THREE.BoxGeometry(1,1,1,512,512,512)
-const boxMat = new THREE.ShaderMaterial({
-    vertexShader: vertexCube,
-    fragmentShader : fragmentCube,
+const boxMat1 = new THREE.ShaderMaterial({
+    vertexShader: vertexCube1,
+    fragmentShader : fragmentCube1,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value : 0 },
+        uTaux : {value : 0.3 },
     }
 })
-const cube1 = new THREE.Mesh(boxGeo,boxMat)
-const cube2 = new THREE.Mesh(boxGeo,boxMat)
+const boxMat2 = new THREE.ShaderMaterial({
+    vertexShader: vertexCube2,
+    fragmentShader : fragmentCube2,
+    uniforms :{
+        uTime : {value : 0},
+        uTaux : {value : 0.3 },
+    }
+})
+const cube1 = new THREE.Mesh(boxGeo,boxMat1)
+const cube2 = new THREE.Mesh(boxGeo,boxMat2)
 console.log(cube1.material.uniforms.uTime.value)
 
 
@@ -114,6 +128,8 @@ const clock = new THREE.Clock()
 function tick(){
     const elapsedTime = clock.getElapsedTime()
     cube1.material.uniforms.uTime.value = elapsedTime
+    cube2.material.uniforms.uTime.value = elapsedTime
+
     
     controls.update()
 
@@ -124,11 +140,7 @@ function tick(){
 }
 tick()
 
-document.querySelector('#next').addEventListener('click',
-    rotateCube
-    
-    
-)
+document.querySelector('#next').addEventListener('click',rotateCube)
 
 function rotateCube(e){
     e.target.style.display="none"
@@ -144,4 +156,16 @@ function rotateAnimation(){
     requestAnimationFrame(rotateAnimation)
 }
 
- 
+ choix1.addEventListener('click',e=>{
+    cube1.material.uniforms.uTaux.value = 0.1
+    cube2.material.uniforms.uTaux.value = -0.3
+    console.log('oups');
+
+ })
+
+ choix2.addEventListener('click',e=>{
+    cube1.material.uniforms.uTaux.value = 0.1
+    cube2.material.uniforms.uTaux.value = -0.3
+    console.log('oups');
+
+ })

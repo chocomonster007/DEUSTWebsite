@@ -39,3 +39,16 @@ h2{
     transform: translateX(-50%);
     z-index: 10;
 }
+
+section{
+    position: absolute;
+    width: 50vw;
+    height: 100%;
+    top: 0;
+}
+.gauche{
+    left: 0;
+}
+.droite{
+    right: 0;
+}

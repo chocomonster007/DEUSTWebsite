@@ -87,11 +87,12 @@ float cnoise(vec3 P)
 
 void main(){
     vec4 modelPosition = modelMatrix * vec4(position,1.0);
-    float elevation = abs(cnoise(modelPosition.xzy + uTime)*0.2);
+    float elevation = cnoise(modelPosition.xzy + uTime)*0.2;
 
     modelPosition.y = min(modelPosition.y, uTaux);
-    if(modelPosition.y>uTaux-0.05)
+    if(modelPosition.y>uTaux-0.05){
     modelPosition.y += elevation;
+    }
     vec4 viewPositon = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPositon;
 

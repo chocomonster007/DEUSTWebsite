@@ -66,16 +66,16 @@ const boxMat1 = new THREE.ShaderMaterial({
     fragmentShader : fragmentCube1,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value : 0.3 },
-    }
+        uTaux : {value : -0.71 },
+    },transparent:true
 })
 const boxMat2 = new THREE.ShaderMaterial({
     vertexShader: vertexCube2,
     fragmentShader : fragmentCube2,
     uniforms :{
         uTime : {value : 0},
-        uTaux : {value : 0.3 },
-    }
+        uTaux : {value : -0.71 },
+    }, transparent:true
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat1)
 const cube2 = new THREE.Mesh(boxGeo,boxMat2)
@@ -151,17 +151,30 @@ function rotateCube(e){
 function rotateAnimation(){
     groupDroite.rotation.x += Math.PI * 0.022
     groupGauche.rotation.x += Math.PI * 0.02
-    cube1.material.uniforms.uTaux.value += 0.02;
+    cube1.material.uniforms.uTaux.value -= 0.02;
+    cube2.material.uniforms.uTaux.value -= 0.02;
 
     requestAnimationFrame(rotateAnimation)
 }
+let TauxMax =[0.1,-0.3]
 
- choix1.addEventListener('click',e=>{
-    cube1.material.uniforms.uTaux.value = 0.1
-    cube2.material.uniforms.uTaux.value = -0.3
-    console.log('oups');
+choix1.addEventListener('click',choixFait)
 
- })
+function choixFait(){
+
+    if(cube1.material.uniforms.uTaux.value<TauxMax[0]){
+        cube1.material.uniforms.uTaux.value += 0.008
+
+    }
+    if(cube2.material.uniforms.uTaux.value<TauxMax[1]){
+        cube2.material.uniforms.uTaux.value += 0.008
+
+    } 
+
+
+    requestAnimationFrame(choixFait)
+
+}
 
  choix2.addEventListener('click',e=>{
     cube1.material.uniforms.uTaux.value = 0.1

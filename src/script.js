@@ -11,7 +11,6 @@ import fragmentCube2 from './shader/cube2/fragment.glsl'
 const choix1 = document.querySelector('.gauche')
 const choix2 = document.querySelector('.droite')
 
-
 const gui = new GUI();
 
 // Canvas
@@ -43,7 +42,6 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
 
 window.addEventListener('resize', () =>
 {
@@ -130,14 +128,13 @@ function tick(){
     cube1.material.uniforms.uTime.value = elapsedTime
     cube2.material.uniforms.uTime.value = elapsedTime
 
-    
     controls.update()
 
     renderer.render(scene, camera)
 
     window.requestAnimationFrame(tick)
-
 }
+
 tick()
 
 document.querySelector('#next').addEventListener('click',rotateCube)
@@ -149,13 +146,15 @@ function rotateCube(e){
 }
 
 function rotateAnimation(){
-    groupDroite.rotation.x += Math.PI * 0.022
-    groupGauche.rotation.x += Math.PI * 0.02
-    cube1.material.uniforms.uTaux.value -= 0.02;
-    cube2.material.uniforms.uTaux.value -= 0.02;
-
+    groupDroite.rotation.x += clock.getElapsedTime()*0.01
+    groupGauche.rotation.x += clock.getElapsedTime()*0.01
+    
+    cube1.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
+    cube2.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
+    
     requestAnimationFrame(rotateAnimation)
 }
+
 let TauxMax =[0.1,-0.3]
 
 choix1.addEventListener('click',choixFait)
@@ -164,21 +163,12 @@ function choixFait(){
 
     if(cube1.material.uniforms.uTaux.value<TauxMax[0]){
         cube1.material.uniforms.uTaux.value += 0.008
-
     }
     if(cube2.material.uniforms.uTaux.value<TauxMax[1]){
         cube2.material.uniforms.uTaux.value += 0.008
-
     } 
 
-
     requestAnimationFrame(choixFait)
-
 }
 
- choix2.addEventListener('click',e=>{
-    cube1.material.uniforms.uTaux.value = 0.1
-    cube2.material.uniforms.uTaux.value = -0.3
-    console.log('oups');
-
- })
+ choix2.addEventListener('click',choixFait)

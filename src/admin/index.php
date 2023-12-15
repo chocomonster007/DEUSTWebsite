@@ -1,11 +1,5 @@
 <?php
 
-$pdo = new PDO("mysql:host=localhost;dbname=jeu", "root", "root");
-$password = password_hash('Lereste@:11.04',PASSWORD_BCRYPT);
-$query = $pdo->prepare("INSERT INTO account SET username = :username, password = :password");
-$query->execute(['username'=>'KingDuDeust', 'password'=>$password]);
-
-
 ?>
 
 

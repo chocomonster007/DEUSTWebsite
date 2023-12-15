@@ -1,4 +1,10 @@
 <?php
+session_start();
+$pdo = new PDO("mysql:host=localhost;dbname=jeu", "root", "root");
+
+$pdo->exec("INSERT INTO ajout SET reponse1='Utiliser ton ordi', reponse2='Utiliser l\'ordi du deust'");
+$pdo->exec("INSERT INTO ajout SET reponse1='Aller en cours en vélo sous la pluie', reponse2='Prendre un bus bondé de monde'");
+
 
 ?>
 

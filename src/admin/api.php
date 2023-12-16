@@ -8,6 +8,7 @@ $pdo->exec('CREATE TABLE IF NOT EXISTS ajout (id INT PRIMARY KEY NOT NULL AUTO_I
 
 $pdo->exec('CREATE TABLE IF NOT EXISTS account (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(250))');
 
+
 if(isset($_POST['question'])){
 
 }

@@ -30,10 +30,16 @@ else{
 
 if(isset($_GET['add'])){
     $query = $pdo->query('SELECT * FROM ajout WHERE id = '.$_GET['add']);
-    $addition = $query->fetch(PDO::FETCH_CLASS, Choix::class);
-    $insert = $pdo->prepare("INSERT INTO tupreferes SET reponse1 = :reponse1, reponse2 =:reponse2");
-    $insert->execute(['reponse1'=>$addition->reponse1, 'reponse2'=>$addition->reponse2]);
-    $pdo->exec("DELETE FROM ajout WHERE id = ".$_GET['add']);
+    $addition = $query->fetch();
+    if($addition){
+        $insert = $pdo->prepare("INSERT INTO tupreferes SET reponse1 = :reponse1, reponse2 =:reponse2");
+        $insert->execute(['reponse1'=>$addition["reponse1"], 'reponse2'=>$addition['reponse2']]);
+        $pdo->exec("DELETE FROM ajout WHERE id = ".$_GET['add']);
+    }
+ 
+}
+if(isset($_GET['supp'])){
+    $pdo->exec("DELETE FROM ajout WHERE id = ".$_GET['supp']);
 }
 
 $query = $pdo->query('SELECT * FROM ajout');

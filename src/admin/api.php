@@ -1,4 +1,6 @@
 <?php
+header("Content-Type: application/json");
+header('Access-Control-Allow-Origin : *');
 
 $pdo = new PDO("mysql:host=localhost;dbname=jeu", "root", "root");
 
@@ -9,13 +11,17 @@ $pdo->exec('CREATE TABLE IF NOT EXISTS ajout (id INT PRIMARY KEY NOT NULL AUTO_I
 $pdo->exec('CREATE TABLE IF NOT EXISTS account (id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(250))');
 
 
-if(isset($_POST['question'])){
+if(isset($_GET['recup'])){
+    $query = $pdo->query("SELECT * FROM tupreferes");
+    $result = $query->fetch();
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+}
+
+if(isset($_GET['ajoutquestion'])){
 
 }
 
-if(isset($_POST['ajoutquestion'])){
 
-}
 
 ?>
 

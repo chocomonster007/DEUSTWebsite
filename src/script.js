@@ -77,7 +77,6 @@ const boxMat2 = new THREE.ShaderMaterial({
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat1)
 const cube2 = new THREE.Mesh(boxGeo,boxMat2)
-console.log(cube1.material.uniforms.uTime.value)
 
 
 const groupDroite = new THREE.Group()
@@ -172,3 +171,22 @@ function choixFait(){
 }
 
  choix2.addEventListener('click',choixFait)
+
+ let index = Math.round(Math.random()+1);
+ console.log(index);
+
+async function fetchData(){
+    const r = await fetch('http://91.165.239.186:2020/api.php?recup='+ index,{
+        method: "GET",
+        mode: "cors",
+        credentials:"omit"
+
+    })
+    console.log(r)
+    if(r.ok===true){
+        
+        return r.json()
+    }
+ }
+
+fetchData().then(users=>console.log(users))

@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import GUI from 'lil-gui';
@@ -33,8 +32,6 @@ camera.position.z = 3
 
 scene.add(camera)
 
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
 // Renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -65,6 +62,7 @@ const boxMat1 = new THREE.ShaderMaterial({
     uniforms :{
         uTime : {value : 0},
         uTaux : {value : -0.71 },
+        uColor : {value : new THREE.Vector3(0.2,0.2,0.2)},
     },transparent:true
 })
 const boxMat2 = new THREE.ShaderMaterial({
@@ -73,6 +71,7 @@ const boxMat2 = new THREE.ShaderMaterial({
     uniforms :{
         uTime : {value : 0},
         uTaux : {value : -0.71 },
+        uColor : {value : new THREE.Vector3(0.2,0.2,0.2)},
     }, transparent:true
 })
 const cube1 = new THREE.Mesh(boxGeo,boxMat1)
@@ -90,8 +89,16 @@ groupGauche.add(cube1)
 groupDroite.add(cube2)
 
 const textMat = new THREE.MeshBasicMaterial({
-    color: "#ff0000"
+    color: "#ff0000",
 })
+
+const cubeExtGeo = new THREE.BoxGeometry(1.01,1.01,1.01)
+const cubeExt1 = new THREE.Mesh(cubeExtGeo,textMat)
+const cubeExt2 = new THREE.Mesh(cubeExtGeo,textMat)
+
+
+groupDroite.add(cubeExt1)
+groupGauche.add(cubeExt2)
 
 const loader = new FontLoader();
 
@@ -127,8 +134,6 @@ function tick(){
     cube1.material.uniforms.uTime.value = elapsedTime
     cube2.material.uniforms.uTime.value = elapsedTime
 
-    controls.update()
-
     renderer.render(scene, camera)
 
     window.requestAnimationFrame(tick)
@@ -142,30 +147,44 @@ function rotateCube(e){
     e.target.style.display="none"
 
     rotateAnimation()
+    setTimeout(() => {
+        cube1.material.uniforms.uColor.value = new THREE.Vector3(0.2,0.2,0.2)
+        cube2.material.uniforms.uColor.value = new THREE.Vector3(0.2,0.2,0.2)
+
+    }, 1000);
 }
 
 function rotateAnimation(){
-    groupDroite.rotation.x += clock.getElapsedTime()*0.01
-    groupGauche.rotation.x += clock.getElapsedTime()*0.01
+    groupDroite.rotation.x = clock.getElapsedTime()
+    groupGauche.rotation.x = clock.getElapsedTime()
     
-    cube1.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
-    cube2.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
-    
+    decrease()
     requestAnimationFrame(rotateAnimation)
 }
 
-let TauxMax =[0.1,-0.3]
+function decrease(){
+    cube1.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
+    cube2.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
+    console.log('tjrs');
+    if(cube1.material.uniforms.uTaux.value<0 && cube2.material.uniforms.uTaux.value<0){
+        
+    }
+}
+
+let TauxMax =[0.0,-0.3]
 
 choix1.addEventListener('click',choixFait)
+choix1.addEventListener('click',()=>{
+    cube1.material.uniforms.uColor.value = new THREE.Vector3(1.0,1.0,0.0)
+})
+choix2.addEventListener('click',()=>{
+    cube2.material.uniforms.uColor.value = new THREE.Vector3(1.0,1.0,0.0)
+})
 
 function choixFait(){
 
-    if(cube1.material.uniforms.uTaux.value<TauxMax[0]){
-        cube1.material.uniforms.uTaux.value += 0.008
-    }
-    if(cube2.material.uniforms.uTaux.value<TauxMax[1]){
-        cube2.material.uniforms.uTaux.value += 0.008
-    } 
+    cube1.material.uniforms.uTaux.value += Math.min(cube1.material.uniforms.uTaux.value,TauxMax[0])-cube1.material.uniforms.uTaux.value + 0.008
+    cube2.material.uniforms.uTaux.value += Math.min(cube2.material.uniforms.uTaux.value,TauxMax[1])-cube2.material.uniforms.uTaux.value + 0.008
 
     requestAnimationFrame(choixFait)
 }
@@ -182,11 +201,10 @@ async function fetchData(){
         credentials:"omit"
 
     })
-    console.log(r)
     if(r.ok===true){
         
-        return r.json()
+        return r.json();
     }
  }
 
-fetchData().then(users=>console.log(users))
+fetchData().then(users=>console.log(JSON.stringify(users)))

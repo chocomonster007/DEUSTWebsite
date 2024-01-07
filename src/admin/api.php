@@ -18,7 +18,7 @@ if(isset($_GET['recup'])){
 }
 
 if(isset($_GET['ajoutquestion'])){
-
+    
 }
 
 

@@ -6,6 +6,7 @@ import vertexCube1 from './shader/cube1/vertex.glsl'
 import fragmentCube1 from './shader/cube1/fragment.glsl'
 import vertexCube2 from './shader/cube2/vertex.glsl'
 import fragmentCube2 from './shader/cube2/fragment.glsl'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const choix1 = document.querySelector('.gauche')
 const choix2 = document.querySelector('.droite')
@@ -39,6 +40,8 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+const controls = new OrbitControls( camera, renderer.domElement );
 
 window.addEventListener('resize', () =>
 {
@@ -91,15 +94,30 @@ groupDroite.add(cube2)
 const textMat = new THREE.MeshBasicMaterial({
     color: "#ff0000",
 })
+const cubeExtMat = new THREE.MeshToonMaterial({
+    color:0xffffff,
+    transparent : true,
+    opacity: 0.2
+})
 
 const cubeExtGeo = new THREE.BoxGeometry(1.01,1.01,1.01)
-const cubeExt1 = new THREE.Mesh(cubeExtGeo,textMat)
-const cubeExt2 = new THREE.Mesh(cubeExtGeo,textMat)
+const cubeExt1 = new THREE.Mesh(cubeExtGeo,cubeExtMat)
+const cubeExt2 = new THREE.Mesh(cubeExtGeo,cubeExtMat)
 
+cubeExt1.receiveShadow = true
+cubeExt2.receiveShadow = true
 
 groupDroite.add(cubeExt1)
 groupGauche.add(cubeExt2)
 
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 10 );
+scene.add( directionalLight );
+directionalLight.position.z = 3
+directionalLight.position.x = 1
+
+
+const helper = new THREE.DirectionalLightHelper(directionalLight)
+scene.add(helper)
 const loader = new FontLoader();
 
 loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
@@ -135,6 +153,8 @@ function tick(){
     cube2.material.uniforms.uTime.value = elapsedTime
 
     renderer.render(scene, camera)
+
+    controls.update()
 
     window.requestAnimationFrame(tick)
 }

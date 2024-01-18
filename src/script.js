@@ -94,10 +94,12 @@ groupDroite.add(cube2)
 const textMat = new THREE.MeshBasicMaterial({
     color: "#ff0000",
 })
-const cubeExtMat = new THREE.MeshToonMaterial({
+const cubeExtMat = new THREE.MeshStandardMaterial({
     color:0xffffff,
     transparent : true,
-    opacity: 0.2
+    opacity: 0.2,
+    roughness: 0.2,
+    metalness :1
 })
 
 const cubeExtGeo = new THREE.BoxGeometry(1.01,1.01,1.01)
@@ -110,7 +112,7 @@ cubeExt2.receiveShadow = true
 groupDroite.add(cubeExt1)
 groupGauche.add(cubeExt2)
 
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 10 );
+const directionalLight = new THREE.DirectionalLight( 0xffede6, 15 );
 scene.add( directionalLight );
 directionalLight.position.z = 3
 directionalLight.position.x = 1
@@ -174,10 +176,12 @@ function rotateCube(e){
     }, 1000);
 }
 
+let lastElapsedTime = 0
 function rotateAnimation(){
-    groupDroite.rotation.x = clock.getElapsedTime()
-    groupGauche.rotation.x = clock.getElapsedTime()
     
+    groupDroite.rotation.x += clock.getElapsedTime() - lastElapsedTime
+    groupGauche.rotation.x += clock.getElapsedTime() - lastElapsedTime
+    lastElapsedTime = clock.getElapsedTime()
     decrease()
     requestAnimationFrame(rotateAnimation)
 }
@@ -186,9 +190,7 @@ function decrease(){
     cube1.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
     cube2.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
     console.log('tjrs');
-    if(cube1.material.uniforms.uTaux.value<0 && cube2.material.uniforms.uTaux.value<0){
-        
-    }
+
 }
 
 let TauxMax =[0.0,-0.3]

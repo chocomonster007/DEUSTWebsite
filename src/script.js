@@ -164,9 +164,10 @@ function tick(){
 tick()
 
 document.querySelector('#next').addEventListener('click',rotateCube)
-
+let clockBis
 function rotateCube(e){
     e.target.style.display="none"
+    clockBis = new THREE.Clock()
 
     rotateAnimation()
     setTimeout(() => {
@@ -176,19 +177,17 @@ function rotateCube(e){
     }, 1000);
 }
 
-let lastElapsedTime = 0
+
 function rotateAnimation(){
-    
-    groupDroite.rotation.x += clock.getElapsedTime() - lastElapsedTime
-    groupGauche.rotation.x += clock.getElapsedTime() - lastElapsedTime
-    lastElapsedTime = clock.getElapsedTime()
+    groupDroite.rotation.x = clockBis.getElapsedTime()*3
+    groupGauche.rotation.x = clockBis.getElapsedTime()*3
     decrease()
     requestAnimationFrame(rotateAnimation)
 }
 
 function decrease(){
-    cube1.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
-    cube2.material.uniforms.uTaux.value -= clock.getElapsedTime()*0.003;
+    cube1.material.uniforms.uTaux.value -= clockBis.getElapsedTime()*0.03;
+    cube2.material.uniforms.uTaux.value -= clockBis.getElapsedTime()*0.03;
     console.log('tjrs');
 
 }

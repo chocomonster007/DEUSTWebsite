@@ -112,7 +112,7 @@ cubeExt2.receiveShadow = true
 groupDroite.add(cubeExt1)
 groupGauche.add(cubeExt2)
 
-const directionalLight = new THREE.DirectionalLight( 0xffede6, 15 );
+const directionalLight = new THREE.DirectionalLight( 0xffede6, 58 );
 scene.add( directionalLight );
 directionalLight.position.z = 3
 directionalLight.position.x = 1
@@ -163,7 +163,6 @@ function tick(){
 
 tick()
 
-document.querySelector('#next').addEventListener('click',rotateCube)
 let clockBis
 function rotateCube(e){
     e.target.style.display="none"
@@ -203,11 +202,18 @@ choix2.addEventListener('click',()=>{
 })
 
 function choixFait(){
+    document.querySelector('#next').style.display = 'block'
+document.querySelector('#next').addEventListener('click',rotateCube)
+remplissageCube()
+    
+}
+
+function remplissageCube(){
 
     cube1.material.uniforms.uTaux.value += Math.min(cube1.material.uniforms.uTaux.value,TauxMax[0])-cube1.material.uniforms.uTaux.value + 0.008
     cube2.material.uniforms.uTaux.value += Math.min(cube2.material.uniforms.uTaux.value,TauxMax[1])-cube2.material.uniforms.uTaux.value + 0.008
 
-    requestAnimationFrame(choixFait)
+    requestAnimationFrame(remplissageCube)
 }
 
  choix2.addEventListener('click',choixFait)

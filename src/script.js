@@ -1,17 +1,11 @@
 import * as THREE from 'three'
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import GUI from 'lil-gui';
 import vertexCube1 from './shader/cube1/vertex.glsl'
 import fragmentCube1 from './shader/cube1/fragment.glsl'
 import vertexCube2 from './shader/cube2/vertex.glsl'
 import fragmentCube2 from './shader/cube2/fragment.glsl'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const choix1 = document.querySelector('.gauche')
 const choix2 = document.querySelector('.droite')
-
-const gui = new GUI();
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -41,7 +35,6 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-const controls = new OrbitControls( camera, renderer.domElement );
 
 window.addEventListener('resize', () =>
 {
@@ -91,9 +84,6 @@ groupDroite.position.y = -0.3
 groupGauche.add(cube1)
 groupDroite.add(cube2)
 
-const textMat = new THREE.MeshBasicMaterial({
-    color: "#ff0000",
-})
 const cubeExtMat = new THREE.MeshStandardMaterial({
     color:0xffffff,
     transparent : true,
@@ -120,29 +110,6 @@ directionalLight.position.x = 1
 
 const helper = new THREE.DirectionalLightHelper(directionalLight)
 scene.add(helper)
-const loader = new FontLoader();
-
-loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-
-	const geometry = new TextGeometry( "Hello three.js!"
-    , {
-		font: font,
-		size: 0.07,
-		height: 0.04,
-		curveSegments: 8,
-		bevelEnabled: false,
-		bevelThickness: 0.01,
-		bevelSize: 0.001,
-		bevelOffset: 0,
-		bevelSegments: 5
-	} );
-    console.log(geometry)
-    geometry.center()
-    const meshText = new THREE.Mesh(geometry, textMat)
-    meshText.position.set(0,0,0.5)
-    
-    groupGauche.add(meshText)
-} );
 
 scene.add(groupGauche)
 scene.add(groupDroite)
@@ -203,6 +170,8 @@ choix2.addEventListener('click',()=>{
 
 function choixFait(){
     document.querySelector('#next').style.display = 'block'
+    choix1.style.display='none'
+    choix2.style.display='none'
 document.querySelector('#next').addEventListener('click',rotateCube)
 remplissageCube()
     
@@ -221,7 +190,7 @@ function remplissageCube(){
  let index = Math.round(Math.random()+1);
  console.log(index);
 
-async function fetchData(){
+async function fetchQuestion(index){
     const r = await fetch('http://91.165.239.186:2020/api.php?recup='+ index,{
         method: "GET",
         mode: "cors",
@@ -230,8 +199,7 @@ async function fetchData(){
     })
     if(r.ok===true){
         
-        return r.json();
+        return await r.json();
     }
  }
-
-fetchData().then(users=>console.log(JSON.stringify(users)))
+fetchQuestion(index)
